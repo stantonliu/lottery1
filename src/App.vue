@@ -134,22 +134,18 @@ export default {
       awardHandler()
     })
 
-    const awardHandler = async (name) => {
+    const awardHandler = (name) => {
       if (name === award.name) return
       if (name) award.name = name
-      // ui.showResult = false
-      if (ui.showResult) panelHandler()
-      await getAwardResult()
-      // if (award.details.remain < 1) {
-      //   panelHandler('all')
-      // } else {
-      //   panelHandler()
-      // }
+
+      panelHandler()
+      getAwardResult()
     }
 
     const resetStatus = () => {
       ui.showResult = false
       award.num = 1
+      award.result.splice(0)
       ui.showDrawPanel = true
       console.log('reset status')
       // anim.value.resetAnimation()
@@ -172,10 +168,9 @@ export default {
         ui.resultType = type
         ui.showResult = true
         ui.showDrawPanel = false
-        if (type === 'all' && award.result.length) award.result.splice(0)
       } else {
-        resetStatus()
         if (award.result.length) anim.value.resetAnimation()
+        resetStatus()
       }
     }
 
@@ -385,7 +380,10 @@ h1 {
   }
   .num-selector {
     position: relative;
-    padding: 0 60px 0 10px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 10px;
     border-bottom: 2px solid rgba(#f3f5f7, 0.8);
     cursor: pointer;
   }
@@ -395,7 +393,8 @@ h1 {
     appearance: none;
     background-color: transparent;
     font-size: 40px;
-    min-width: 45px;
+    min-width: 60px;
+    text-align: center;
     color: #f3f5f7;
     caret-color: #ff6768;
 
@@ -406,15 +405,12 @@ h1 {
     }
   }
   p {
-    position: absolute;
-    right: 0;
-    bottom: 5px;
     margin: 0;
     color: #ff6768;
-    width: 50px;
+    min-width: 50px;
     font-size: 20px;
     white-space: nowrap;
-    transform: translateX(-10px);
+    transform: translateY(-5px);
   }
   button {
     display: block;
