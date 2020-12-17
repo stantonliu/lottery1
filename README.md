@@ -1,24 +1,20 @@
-# y20-f2e-lottery
+# 2020尾牙抽獎F2E
+## 本機運行
 
-## Project setup
+安裝相依套件
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+啟動後端server後再執行
 ```
 yarn serve
 ```
 
-### Compiles and minifies for production
-```
-yarn build
-```
+## 頁面操作說明
 
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+1. 點擊獎項標籤選擇獎項別
+2. 點擊下方數字輸入抽出人數，右邊小字是目前獎項的剩餘數量，點選直接選到最大值
+3. 點擊「開抽」開始抽獎（會先有一段canvas動畫再出現中獎名單）
+4. 右下角的返回按鈕回到抽獎頁面
+5. 右下角的查看按鈕查看目前該獎項的中獎名單（若該獎項還沒有中獎名單則不顯示）
