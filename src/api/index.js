@@ -80,7 +80,7 @@ export async function apiGetAwardResult (awardName) {
 
 export async function apiGetMemberList () {
   try {
-    const res = await req.get('/api/candidate/all')
+    const res = await req.get('/api/candidate/no-win')
     return { data: res.data.data }
   } catch (err) {
     return { error: err }
