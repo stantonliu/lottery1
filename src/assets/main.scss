@@ -1,0 +1,47 @@
+@import '~normalize-css/normalize.css';
+@import url('https://css.gg/close.css');
+
+@font-face {
+  font-family: 'JetBrains';
+  src: url('~@/assets/fonts/JetBrainsMono-VariableFont_wght.ttf') format('truetype');
+}
+body {
+  color: #f3f5f7;
+  background-color: #151f28;
+}
+
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+
+input, select, textarea {
+  border: 0;
+  border-radius: 0;
+}
+
+
+input, button, select {
+  outline: none;
+  appearance: none;
+  -moz-appearance:none;
+  -webkit-appearance:none;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+::-webkit-input-placeholder {
+  color: transparent; }
+
+:-ms-input-placeholder {
+  color: transparent; }
+
+::-ms-input-placeholder {
+  color: transparent; }
+
+::placeholder {
+  color: transparent; }
+
+select::-ms-expand {
+  display: none;
+}
