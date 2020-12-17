@@ -48,8 +48,8 @@
             :style="`--delay: ${(idx > 10 ? 10 : idx) * 0.1}s`"
           >
             <div class="col code">{{ person.staffCode }}</div>
-            <div class="col dep">{{ person.department }}</div>
             <div class="col name">{{ person.staffName }}</div>
+            <div class="col dep">{{ person.department }}</div>
             <div class="giveup">
               <button @click="giveup(person.staffCode)"><i class="gg-close"></i></button>
             </div>
