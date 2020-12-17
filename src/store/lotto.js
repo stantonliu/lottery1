@@ -25,7 +25,6 @@ export default function useLotto () {
     const { data, error } = await apiGetMemberList()
     if (error) return
     lotto.memberList = data
-    console.log(data, error)
   }
 
   async function drawLotto () {
@@ -55,9 +54,11 @@ export default function useLotto () {
       price: money,
       memberList: memberList
     }
+    // 更新抽獎名單
+    getMemberList()
   }
 
-  async function getAwardResult () {
+  async function getAwardResult (clearResult = true) {
     lotto.loading = true
     const { data, error } = await apiGetAwardResult(award.name)
     lotto.loading = false
@@ -74,7 +75,8 @@ export default function useLotto () {
 
     const { limit, money, memberList } = data
 
-    award.result.splice(0)
+    if (clearResult) award.result.splice(0)
+    console.log('get award result', memberList)
     award.details = {
       remain: limit,
       price: money,
@@ -101,7 +103,11 @@ export default function useLotto () {
       return false
     }
 
-    fetchAwardList()
+    const idx = award.result.findIndex(item => item.staffCode === staffCode)
+    award.result.splice(idx, 1)
+
+    // fetchAwardList()
+    getAwardResult(false)
   }
 
   return {
