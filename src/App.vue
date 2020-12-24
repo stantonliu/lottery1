@@ -51,7 +51,7 @@
             <div class="col name">{{ person.staffName }}</div>
             <div class="col dep">{{ person.department }}</div>
             <div class="giveup">
-              <button @click="giveup(person.staffCode)"><i class="gg-close"></i></button>
+              <button @click="ensureGiveupProcess(person)"><i class="gg-close"></i></button>
             </div>
           </div>
         </transition-group>
@@ -61,6 +61,16 @@
   <div class="floating-btn">
     <button @click="panelHandler()" v-show="ui.showResult"><i class="gg-corner-up-left"></i></button>
     <button @click="panelHandler('all')" v-show="award.details?.memberList?.length"><i class="gg-eye"></i></button>
+  </div>
+  <div class="lightbox" v-if="ui.showLightbox && ui.giveupData" @click.self="ui.showLightbox = false">
+    <div class="modal">
+      <p>{{ ui.giveupData.staffCode }} {{ ui.giveupData.staffName }}</p>
+      <p>確定放棄此獎項？</p>
+      <div class="control">
+        <button class="btn fill" @click="giveup">確定</button>
+        <button class="btn outline" @click="ui.showLightbox = false">取消</button>
+      </div>
+    </div>
   </div>
   <div class="canvas-wrap">
     <Canvas :members="lotto.memberList" state="normal" :picked="award.result" @animationend="panelHandler('new')" ref="anim" />
@@ -101,7 +111,9 @@ export default {
       currentPrice: computed(() => {
         if (!award.details.price) return null
         else return Number(award.details.price).toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' }).split('.')[0]
-      })
+      }),
+      giveupData: null,
+      showLightbox: false
     })
 
     const resultList = ref([])
@@ -151,14 +163,21 @@ export default {
       // anim.value.resetAnimation()
     }
 
+    const ensureGiveupProcess = ({ staffCode, staffName }) => {
+      ui.giveupData = { staffCode, staffName }
+      ui.showLightbox = true
+    }
+
     const giveup = async (code) => {
+      ui.showLightbox = false
       if (resultList.value.length <= 1) {
         anim.value.resetAnimation()
         setTimeout(() => {
           panelHandler()
-        }, 400)
+        }, 600)
       }
-      giveUpAward(code)
+      giveUpAward(ui.giveupData.staffCode)
+      ui.giveupData = null
     }
 
     const panelHandler = (type) => {
@@ -226,7 +245,8 @@ export default {
       beforeSlideOut,
       onSlideOut,
       afterSlideOut,
-      ui
+      ui,
+      ensureGiveupProcess
     }
   }
 }
@@ -287,6 +307,7 @@ h1 {
   align-items: center;
 }
 .draw-tool {
+  position: relative;
   margin-top: 0px;
   padding: 40px 0 20px 0;
   width: 100%;
@@ -357,7 +378,11 @@ h1 {
       height: 300px;
       overflow-y: auto;
       background-color: #fb8080;
+      scroll-snap-type: y mandatory;
       // background-color: #4d525d;
+      .option {
+        scroll-snap-align: start;
+      }
     }
   }
 
@@ -471,9 +496,10 @@ h1 {
       pointer-events: none;
     }
     &.slide-out {
-      transform: translateY(20px) translateZ(0);
+      transform: translateX(-20px) translateZ(0);
+      // transform: translateY(20px) translateZ(0);
       opacity: 0;
-      transition: all 0.3s ease;
+      transition: all 0.3s ease 0s;
       pointer-events: none;
     }
     &.active {
@@ -533,6 +559,55 @@ h1 {
 
     + button {
       margin-top: 10px;
+    }
+  }
+}
+
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(#000, 0.8);
+  z-index: 10;
+
+  .modal {
+    width: 300px;
+    padding: 10px 20px 20px 20px;
+    color: #444;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 5px rgba(#000, 0.2);
+    text-align: center;
+  }
+
+  .control {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+
+    .btn {
+      color: #182635;
+      border-radius: 4px;
+      padding: 5px 24px;
+      border: 2px solid #6b778d;
+
+      &:active {
+        transform: scale(0.97);
+      }
+
+      &.fill {
+        color: #f3f3f3;
+        background-color: #6b778d;;
+      }
+
+      + .btn {
+        margin-left: 10px;
+      }
     }
   }
 }
