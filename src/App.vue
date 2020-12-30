@@ -3,7 +3,8 @@
     <h1 :class="{ hide: ui.showResult }">2020尾牙抽獎直播</h1>
     <div class="draw-tool">
       <div class="award-area" :class="{ 'animate-slide': ui.showResult }">
-        <div
+        <div class="selector-wrap">
+          <div
           :class="['award-selector', { expand: ui.selectorExpand }]"
           :style="{ '--totalHeight': `${(lotto.awardList.length + 1) * 60}px` }"
         >
@@ -15,6 +16,7 @@
               {{ item.name }}
             </div>
           </div>
+        </div>
         </div>
         <p class="price">{{ ui.currentPrice }}</p>
       </div>
@@ -110,12 +112,19 @@ export default {
       }),
       currentPrice: computed(() => {
         if (!award.details.price) return null
-        else return Number(award.details.price).toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' }).split('.')[0]
+        // else return Number(award.details.price).toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' }).split('.')[0]
+        const splitter = award.details.price.split('+')
+        const price = formatCurrency(splitter[0])
+        const addition = splitter[1]
+
+        return addition ? `${price}+${addition}` : price
       }),
       giveupData: null,
       showLightbox: false
     })
-
+    function formatCurrency (price) {
+      return Number(price).toLocaleString('zh-TW', { style: 'currency', currency: 'TWD' }).split('.')[0]
+    }
     const resultList = ref([])
     const listCache = ref([])
     watch(listCache, (val, oldVal) => {
@@ -319,27 +328,29 @@ h1 {
 }
 .award-area {
   position: relative;
-  width: 60vw;
+  // width: 60vw;
   margin-left: -40px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   will-change: transform;
   transition: transform 0.4s ease 0.2s;
   z-index: 50;
 
   .price {
-    position: relative;
-    left: 50%;
-    font-size: 52px;
+    font-size: 50px;
     margin: 0;
-    text-align: right;
-    // color: #ff6768;
+    text-align: left;
+  }
+
+  .selector-wrap {
+    position: relative;
+    width: 150px;
+    height: 60px;
+    margin-bottom: 30px;
   }
 
   .award-selector {
-    position: absolute;
-    left: 50%;
-    top: 50%;
     width: 150px;
     outline: none;
     border: none;
@@ -351,13 +362,10 @@ h1 {
     height: 60px;
     overflow: hidden;
     background-color: #ff6768;
-    // background-color: #6b778d;
     text-align: center;
     cursor: pointer;
-    transform: translateX(calc(-100% - 30px)) translateY(-30px) translateZ(0);
     transition: height 0.3s cubic-bezier(0.17,0.84,0.44,1);
     &.expand {
-      // height: var(--totalHeight);
       height: 360px;
     }
     .selected-item, .option {
@@ -371,15 +379,11 @@ h1 {
       font-size: 30px;
     }
     .select-options {
-      // position: absolute;
-      // left: 0;
-      // right: 0;
       font-size: 24px;
       height: 300px;
       overflow-y: auto;
       background-color: #fb8080;
       scroll-snap-type: y mandatory;
-      // background-color: #4d525d;
       .option {
         scroll-snap-align: start;
       }
@@ -387,7 +391,7 @@ h1 {
   }
 
   &.animate-slide {
-    transform: translateY(-80px);
+    transform: translateY(-100px);
   }
 }
 .draw-area {
@@ -463,7 +467,7 @@ h1 {
   min-width: 60vw;
   font-size: 20px;
   letter-spacing: 1px;
-  transform: translateY(-40px);
+  transform: translateY(-80px);
   pointer-events: none;
   white-space: nowrap;
   will-change: transform;
